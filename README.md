@@ -38,10 +38,10 @@ This project implements a code completion and evaluation pipeline using the Star
   - The tokenization process passes the split data through a tokenizer specifically chosen to match the StarCoder model.
 
 ### Metrics and Evaluation
-- Besides **exact match** and **chrF**, which have limitations in considering the semantics of the code:
-  - Metrics like **Levenshtein distance**, **blind comparison**, and **cosine similarity** of embeddings are used to capture code semantics better.
-  - The use of **CodeBLEU** provides an additional comparison metric.
-- The approach aims to evaluate semantic similarity, akin to language models generating synonymous sentences or autoencoders creating similar embeddings for similar data (e.g., word2vec).
+- Besides **exact match** and **chrF**, I've considered the following metrics:
+  - **Levenshtein distance** which like **exact match** and **chrF**, are used for blind comparison (no semantic information).
+  - **CodeBLEU**, and **cosine similarity** of embeddings are used to capture code semantics better.
+- The approach aims to evaluate semantic similarity, same as similar sentences have similar embeddings in LLMs or autoencoders creating similar embeddings for similar images (another example is -> word2vec).
 
 ### Model Selection Rationale
 - The **big version of StarCoder** was chosen due to the dataset's complexity, which reflects entry-level programmers' coding styles and often includes messy code. The smaller versions of StarCoder were expected to underperform for this task.
