@@ -17,6 +17,7 @@ def tokenize_entry(entry):
         dict: A dictionary containing the tokenized 'prefix', 'middle', and 'suffix'.
     """
     tokenized = {
+        "language" : entry["language"],
         "prefix": tokenizer.encode(entry["prefix"], return_tensors="pt", truncation=True).tolist(),
         "middle": tokenizer.encode(entry["middle"], return_tensors="pt", truncation=True).tolist(),
         "suffix": tokenizer.encode(entry["suffix"], return_tensors="pt", truncation=True).tolist()
@@ -36,7 +37,7 @@ def tokenize_dataset():
     """Tokenizes the processed dataset and saves it as a single JSON file."""
     # Load processed examples from the specified directory
     processed_data = load_processed_examples()
-    print(processed_data)
+    #print(processed_data)
     # Tokenize each example
     tokenized_examples = [tokenize_entry(entry) for entry in processed_data]
 
