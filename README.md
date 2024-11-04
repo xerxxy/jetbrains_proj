@@ -1,15 +1,47 @@
 # jetbrains_proj
 
-The project is organized like this: inside jetbrains_proj, I have all the files from the JetBrains project. There's a data folder that contains a raw directory with raw code files in different programming languages. Then I've got the processed directory, which has the data split into the format we need, and the tokenized directory, which holds the tokenized data used for running the code completion model.
+## Code Completion and Evaluation with StarCoder
 
-I chose the big version of StarCoder because the dataset is pretty complex—it tries to capture the coding style of an entry-level programmer, and the code is a bit messy. I figured the tiny StarCoder wouldn't perform well enough.
+### Overview
+This project implements a code completion and evaluation pipeline using the StarCoder language model. It performs code completion on a dataset of code snippets and evaluates the generated code using various metrics to assess the model's performance across different programming languages.
 
-In the root folder, we have run_dataset_split, run_dataset_tokenizer, and run_starcoder_inference. The first two just call modules inside src/data to tokenize and process the data.
+### Features
+- **Code Completion with StarCoder**: Generates code completions based on provided code prefixes using the StarCoder model.
+- **Multi-Language Support**: Processes code snippets in various programming languages as specified in the dataset.
+- **Comprehensive Evaluation Metrics**:
+  - **Exact Match**: Checks if the generated code exactly matches the reference code.
+  - **chrF Score**: Calculates the character n-gram F-score to measure similarity.
+  - **Levenshtein Distance**: Computes the minimum number of single-character edits required to change the generated code into the reference code.
+  - **Cosine Similarity**: Uses the StarCoder model's embeddings to measure semantic similarity between code snippets.
+  - **CodeBLEU Score**: Provides a fallback to a simplified CodeBLEU computation.
+- **Embeddings with StarCoder**: Utilizes StarCoder's encoder to generate embeddings for code snippets, ensuring consistency in representation.
 
-The src directory inside jetbrains_project contains the main modules used to split the raw data and tokenize it. The way I split it is pretty straightforward—I tried to avoid cases where the middle section is invalid, like containing comments or empty lines. I also picked cases where the prefix is empty to create more generalized examples.
+### Project Organization
+- Inside `jetbrains_proj`, all the files from the JetBrains project are organized as follows:
+  - **`data` folder**:
+    - `raw` directory: Contains raw code files in different programming languages.
+    - `processed` directory: Contains the data split into the format needed.
+    - `tokenized` directory: Contains the tokenized data used for running the code completion model.
+- **Root folder**:
+  - `run_dataset_split`: Calls modules inside `src/data` to split the raw data.
+  - `run_dataset_tokenizer`: Calls modules inside `src/data` to tokenize the data.
+  - `run_starcoder_inference`: Runs the code completion model and evaluation metrics.
+- **`src` directory**:
+  - Contains the main modules for data splitting and tokenization.
+  - **`src/constants`**: Stores constants used throughout the project to avoid hardcoding values.
 
-The Tokenize dataset just passes the data mentioned above through the tokenizer that's specifically chosen to match the model.
+### Details on Splitting and Tokenization
+- **Data Splitting**:
+  - The splitting process avoids cases where the middle section is invalid (e.g., comments or empty lines).
+  - Examples are picked where the prefix is empty to create more generalized cases.
+- **Tokenization**:
+  - The tokenization process passes the split data through a tokenizer specifically chosen to match the StarCoder model.
 
-In src/constants, I store the constants I use so I don't have to hardcode values everywhere.
+### Metrics and Evaluation
+- Besides **exact match** and **chrF**, which have limitations in considering the semantics of the code:
+  - Metrics like **Levenshtein distance**, **blind comparison**, and **cosine similarity** of embeddings are used to capture code semantics better.
+  - The use of **CodeBLEU** provides an additional comparison metric.
+- The approach aims to evaluate semantic similarity, akin to language models generating synonymous sentences or autoencoders creating similar embeddings for similar data (e.g., word2vec).
 
-For metrics, besides exact match and chrF—which I'm not totally convinced about because they don't really consider the semantics of the code—I used others like Levenshtein distance, blind comparison, and the cosine similarity of the embeddings of the true middle and the predicted middle. In my view, this captures the semantics of the code better. It's kind of like how language models generate synonymous sentences. Another example is an autoencoder generating similar embeddings for similar images, word2vec... I also thought of using CodeBLEU for a more in-depth comparison.
+### Model Selection Rationale
+- The **big version of StarCoder** was chosen due to the dataset's complexity, which reflects entry-level programmers' coding styles and often includes messy code. The smaller versions of StarCoder were expected to underperform for this task.
