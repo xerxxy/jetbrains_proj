@@ -14,7 +14,7 @@ warnings.filterwarnings("ignore")
 
 # Load the tokenizer and model for StarCoder
 tokenizer = AutoTokenizer.from_pretrained("bigcode/starcoder", use_auth_token=True)
-model = AutoModelForCausalLM.from_pretrained("bigcode/starcoder", use_auth_token=True).to(get_device())
+model = AutoModelForCausalLM.from_pretrained("bigcode/starcoder", use_auth_token=True)
 model.eval()
 
 # Load tokenized data from a JSON file
